@@ -1,6 +1,7 @@
 # MSiA423 Template Repository
 
-Developer: Yanmeng Song    QA: Lirong Ma
+Developer: Yanmeng Song    
+QA: Lirong Ma
 
 <!-- toc -->
 
