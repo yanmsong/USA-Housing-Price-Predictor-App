@@ -1,5 +1,7 @@
 # MSiA423 Template Repository
 
+Developer: Yanmeng Song    QA: Lirong Ma
+
 <!-- toc -->
 
 - [Directory structure](#directory-structure)
