@@ -1,10 +1,12 @@
-# MSiA423 Template Repository
+# USA Housing Price Predictor App
 
-Developer: Yanmeng Song    
-QA: Lirong Ma
+**Developer**: Yanmeng (Selina) Song    
+**QA**: Lirong Ma
 
 <!-- toc -->
 
+- [Project Charter](#project-charter)
+- [Backlog](#backlog)
 - [Directory structure](#directory-structure)
 - [Running the app](#running-the-app)
   * [1. Initialize the database](#1-initialize-the-database)
@@ -20,6 +22,112 @@ QA: Lirong Ma
   * [3. Kill the container](#3-kill-the-container)
 
 <!-- tocstop -->
+## Project charter
+
+### Vision: 
+Housing price information online is kind of scattered. It takes lots of time and effort to collect such information and then analyze them to evaluate the price of a specific house that fits users’ needs, especially when it comes to the US states as a whole instead of isolated urban housing markets. 
+
+This project is born in order to: 1) enable potential homebuyers to efficiently find the up-to-date countrywide housing price information based on their preferences, 2) help house sellers better understand the housing market before setting the price.
+
+### Mission: 
+Predict housing price using supervised machine learning models based on Kaggle’s “USA Housing Listings” data that scrapped from Craigslist (the world’s largest collection of privately sold housing options) in Jan. 2020. 
+
+The web app will enable users to input their preferences on housing features and get an estimated price in several seconds. 
+
+Data source: https://www.kaggle.com/austinreese/usa-housing-listings
+
+### Success criteria:
+* Machine Learning performance metric:  
+
+  Given the range of the housing price (rent per month) in the data is approximately from $500 to $2,000, the best predictive model should achieve Root Mean Square Error (RMSE) less than $100. From the perspective of homebuyers, a difference of $100 (per month) between the predicted price and the truth is reasonable/acceptable and thus the app would be considered as useful.
+  
+  To further investigate the model performance for different populations, the RMSE for different types of housing (apartment vs. house vs. condo etc.) or the RMSE for different states in US will be evaluated. 
+
+* Business outcome metric:
+  1. The number of visits (by different users) to the web app per week exceeds 700 (approximately 100 users/day).
+  2. Those users who have visited the web app to predict housing price will be contacted later asking for their experience. The satisfaction rate should be greater than 70%.
+
+## Planning
+
+### **Initiative 1**: Develop a well-performed machine learning model for predicting housing price.
+
+*	**Epic 1**: *explore data and gain insights from features* 
+
+    * **Story 1**: plot histogram to visualize the distribution of each variable, detect outliers and skewness
+    *	**Story 2**: check descriptive statistics of each variable and correlation among them, detect multicollinearity
+    *	**Story 3**: draw a heatmap (using latitude and longitude) to visualize where housing listings are located 
+    *	**Story 4**: identify variations in price by state and by region to investigate significant difference
+    *	**Story 5**: plot pie charts to visualize the makeup of housing types, laundry options, and parking options
+
+*	**Epic 2**: *train a baseline model for use in production*
+
+    *	**Story 1**: scope determining – try different sampling methods to reduce the size of data (originally 384,977 observations), such as stratified sampling based on region
+    *	**Story 2**: data cleaning – remove useless columns, correct erroneous/inconsistent data, treat outliers, impute missing values, transform and standardize variables, etc.
+    *	**Story 3**: feature engineering – generate new features, reduce levels of categorical variables by grouping similar classes, perform feature selection, conduct one-hot encoding, etc.
+    *	**Story 4**: split data into training and test sets (70:30 ratio)
+    *	**Story 5**: build and train a linear regression model and get baseline results
+
+*	**Epic 3**: *improve upon the baseline model for better prediction results*
+
+    *	**Story 1**: build and train other machine learning models, such as Ridge regression, Lasso regression, K-nearest Neighbors, Decision Tree, Random Forests, Gradient Boosting Machine
+    *	**Story 2**: tune hyperparameters for each candidate model through 10-fold cross validation and select the best set of parameters for each model based on cross validation RMSE
+    *	**Story 3**: choose the best model based on prediction accuracy, model interpretability and computational expenditure, then predict on the test set and see the results (RMSE and 95% confidence interval)
+    *	**Story 4**: refit the selected model on the whole cleaned dataset and create table in database to store fitted parameters
+    *	**Story 5**: evaluate feature importance and determine features to be put on web app for user inputs
+    * **Story 6**: code review, logging, and testing for reproducibility
+
+*	**Epic 4**: *update the best model with newly scraped data (given the housing market changes frequently and the data is scraped every few months)*
+
+    *	**Story 1**: apply the similar data processing pipeline to the new data to make it ready for model
+    *	**Story 2**: train the optimal model above on the new training data and report performance metrics on the held-out test set
+    *	**Story 3**: make the final model ready for deployment (i.e., repeat “Initiative1.epic3.story4”)
+
+### **Initiative 2**: Deploy an interactive web application that takes housing features from user and output predicted housing price in several seconds.
+
+*	**Epic 1**: *Design User Interface for interaction*
+    
+    *	**Story 1**: setup the layout and design for the HTML
+    *	**Story 2**: add user input functionality
+    *	**Story 3**: display results and improve the UI if necessary
+
+*	**Epic 2**: *Deploy the web app (Flask) onto AWS*
+
+*	**Epic 3**: *Use an S3 bucket to store raw source data and create an RDS instance*
+
+*	**Epic 4**: *Testing (both unit tests and configured reproducibility tests)*
+
+*	**Epic 5**: *App improvement – provide more insights to users in addition to the predicted price*
+
+## Backlog
+1.	“Initiative1.epic1.story1” (0 point) – PLANNED 
+2.	“Initiative1.epic1.story2” (0 point) – PLANNED 
+3.	“Initiative1.epic1.story3” (1 point) – PLANNED 
+4.	“Initiative1.epic1.story4” (1 point) – PLANNED 
+5.	“Initiative1.epic1.story5” (0 point) – PLANNED 
+6.	“Initiative1.epic2.story1” (2 points) – PLANNED
+7.	“Initiative1.epic2.story2” (4 points) – PLANNED
+8.	“Initiative1.epic2.story3” (4 points) – PLANNED
+9.	“Initiative1.epic2.story4” (0 point) – PLANNED
+10.	 “Initiative1.epic2.story5” (2 points) – PLANNED
+11.	 “Initiative1.epic3.story1” (4 points) – PLANNED
+12.	 “Initiative2.epic1.story1” (4 points)
+13.	 “Initiative1.epic3.story2” (4 points)
+14.	“Initiative1.epic3.story3” (2 points)
+15.	 “Initiative1.epic3.story4” (2 points)
+16.	 “Initiative1.epic3.story5” (1 points)
+17.	“Initiative2.epic1.story2” (4 points)
+18.	“Initiative1.epic3.story6” (4 points)
+
+## Icebox
+
+*	“Initiative1.epic4.story1”
+*	“Initiative1.epic4.story2”
+*	“Initiative1.epic4.story3”
+*	“Initiative2.epic1.story3”
+*	“Initiative2.epic2”
+*	“Initiative2.epic3”
+*	“Initiative2.epic4”
+*	“Initiative2.epic5”
 
 ## Directory structure 
 
