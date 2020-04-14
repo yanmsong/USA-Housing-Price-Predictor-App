@@ -110,7 +110,7 @@ Data source: https://www.kaggle.com/austinreese/usa-housing-listings
 9.	“Initiative1.epic2.story4” (0 point) – PLANNED
 10.	 “Initiative1.epic2.story5” (2 points) – PLANNED
 11.	 “Initiative1.epic3.story1” (4 points) – PLANNED
-12.	 “Initiative2.epic1.story1” (4 points)
+12.	 “Initiative2.epic1.story1” (4 points) – PLANNED
 13.	 “Initiative1.epic3.story2” (4 points)
 14.	“Initiative1.epic3.story3” (2 points)
 15.	 “Initiative1.epic3.story4” (2 points)
