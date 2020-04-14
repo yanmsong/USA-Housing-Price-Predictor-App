@@ -43,7 +43,7 @@ Data source: https://www.kaggle.com/austinreese/usa-housing-listings
   
   To further investigate the model performance for different populations, the RMSE for different types of housing (apartment vs. house vs. condo etc.) or the RMSE for different states in US will be evaluated. 
 
-* Business outcome metric:
+* Business outcome metric(s):
   1. The number of visits (by different users) to the web app per week exceeds 700 (approximately 100 users/day).
   2. Those users who have visited the web app to predict housing price will be contacted later asking for their experience. The satisfaction rate should be greater than 70%.
 
@@ -114,7 +114,7 @@ Data source: https://www.kaggle.com/austinreese/usa-housing-listings
 13.	 “Initiative1.epic3.story2” (4 points)
 14.	“Initiative1.epic3.story3” (2 points)
 15.	 “Initiative1.epic3.story4” (2 points)
-16.	 “Initiative1.epic3.story5” (1 points)
+16.	 “Initiative1.epic3.story5” (1 point)
 17.	“Initiative2.epic1.story2” (4 points)
 18.	“Initiative1.epic3.story6” (4 points)
 
