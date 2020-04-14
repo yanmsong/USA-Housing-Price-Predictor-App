@@ -71,7 +71,7 @@ Data source: https://www.kaggle.com/austinreese/usa-housing-listings
 
     *	**Story 1**: build and train other machine learning models, such as Ridge regression, Lasso regression, K-nearest Neighbors, Decision Tree, Random Forests, Gradient Boosting Machine
     *	**Story 2**: tune hyperparameters for each candidate model through 10-fold cross validation and select the best set of parameters for each model based on cross validation RMSE
-    *	**Story 3**: choose the best model based on prediction accuracy, model interpretability and computational expenditure, then predict on the test set and see the results (RMSE and 95% confidence interval)
+    *	**Story 3**: choose the best model based on prediction accuracy, model interpretability, and computational expenditure, then predict on the test set and see the results (RMSE and 95% confidence interval)
     *	**Story 4**: refit the selected model on the whole cleaned dataset and create table in database to store fitted parameters
     *	**Story 5**: evaluate feature importance and determine features to be put on web app for user inputs
     * **Story 6**: code review, logging, and testing for reproducibility
