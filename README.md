@@ -9,17 +9,17 @@
 - [Backlog](#backlog)
 - [Directory structure](#directory-structure)
 - [Running the app](#running-the-app)
-  * [1. Initialize the database](#1-initialize-the-database)
-    + [Create the database with a single song](#create-the-database-with-a-single-song)
-    + [Adding additional songs](#adding-additional-songs)
-    + [Defining your engine string](#defining-your-engine-string)
-      - [Local SQLite database](#local-sqlite-database)
-  * [2. Configure Flask app](#2-configure-flask-app)
-  * [3. Run the Flask app](#3-run-the-flask-app)
-- [Running the app in Docker](#running-the-app-in-docker)
+  * [1. Data acquisition](#1-data-acquisition)
+    + [Acquire data from data source](#acquire-data-from-data-source)
+    + [Push data to S3 bucket](#push-data-to-S3-bucket)
+  * [2. Initialize the database](#2-initialize-the-database)
+    + [Create database schema](#create-database-schema)
+- [Running ingestion script in Docker](#running-ingestion-script-in-docker)
   * [1. Build the image](#1-build-the-image)
   * [2. Run the container](#2-run-the-container)
-  * [3. Kill the container](#3-kill-the-container)
+    + [Local SQLite database](#local-sqlite-database)
+    + [Database in RDS](#database-in-rds)
+
 
 <!-- tocstop -->
 ## Project charter
