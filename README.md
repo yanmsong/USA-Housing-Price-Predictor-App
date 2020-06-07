@@ -273,5 +273,3 @@ docker kill test
 ```
 
 where `test` is the name given in the `docker run` command.
-
-
