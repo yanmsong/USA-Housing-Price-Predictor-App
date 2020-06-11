@@ -9,17 +9,17 @@
 - [Backlog](#backlog)
 - [Directory structure](#directory-structure)
 - [Running the app](#running-the-app)
-  * [1. Data acquisition](#1-data-acquisition)
-    + [Acquire data from data source](#acquire-data-from-data-source)
-    + [Push data to S3 bucket](#push-data-to-S3-bucket)
-  * [2. Initialize the database](#2-initialize-the-database)
-    + [Create database schema](#create-database-schema)
-- [Running ingestion script in Docker](#running-ingestion-script-in-docker)
+  * [1. Initialize the database](#1-initialize-the-database)
+    + [Create the database with a single song](#create-the-database-with-a-single-song)
+    + [Adding additional songs](#adding-additional-songs)
+    + [Defining your engine string](#defining-your-engine-string)
+      - [Local SQLite database](#local-sqlite-database)
+  * [2. Configure Flask app](#2-configure-flask-app)
+  * [3. Run the Flask app](#3-run-the-flask-app)
+- [Running the app in Docker](#running-the-app-in-docker)
   * [1. Build the image](#1-build-the-image)
   * [2. Run the container](#2-run-the-container)
-    + [Local SQLite database](#local-sqlite-database)
-    + [Database in RDS](#database-in-rds)
-
+  * [3. Kill the container](#3-kill-the-container)
 
 <!-- tocstop -->
 ## Project charter
@@ -43,7 +43,7 @@ Data source: https://www.kaggle.com/austinreese/usa-housing-listings
   
   To further investigate the model performance for different populations, the RMSE for different types of housing (apartment vs. house vs. condo etc.) or the RMSE for different states in US will be evaluated. 
 
-* Business outcome metric:
+* Business outcome metric(s):
   1. The number of visits (by different users) to the web app per week exceeds 700 (approximately 100 users/day).
   2. Those users who have visited the web app to predict housing price will be contacted later asking for their experience. The satisfaction rate should be greater than 70%.
 
@@ -71,7 +71,7 @@ Data source: https://www.kaggle.com/austinreese/usa-housing-listings
 
     *	**Story 1**: build and train other machine learning models, such as Ridge regression, Lasso regression, K-nearest Neighbors, Decision Tree, Random Forests, Gradient Boosting Machine
     *	**Story 2**: tune hyperparameters for each candidate model through 10-fold cross validation and select the best set of parameters for each model based on cross validation RMSE
-    *	**Story 3**: choose the best model based on prediction accuracy, model interpretability and computational expenditure, then predict on the test set and see the results (RMSE and 95% confidence interval)
+    *	**Story 3**: choose the best model based on prediction accuracy, model interpretability, and computational expenditure, then predict on the test set and see the results (RMSE and 95% confidence interval)
     *	**Story 4**: refit the selected model on the whole cleaned dataset and create table in database to store fitted parameters
     *	**Story 5**: evaluate feature importance and determine features to be put on web app for user inputs
     * **Story 6**: code review, logging, and testing for reproducibility
@@ -110,11 +110,11 @@ Data source: https://www.kaggle.com/austinreese/usa-housing-listings
 9.	“Initiative1.epic2.story4” (0 point) – PLANNED
 10.	 “Initiative1.epic2.story5” (2 points) – PLANNED
 11.	 “Initiative1.epic3.story1” (4 points) – PLANNED
-12.	 “Initiative2.epic1.story1” (4 points)
+12.	 “Initiative2.epic1.story1” (4 points) – PLANNED
 13.	 “Initiative1.epic3.story2” (4 points)
 14.	“Initiative1.epic3.story3” (2 points)
 15.	 “Initiative1.epic3.story4” (2 points)
-16.	 “Initiative1.epic3.story5” (1 points)
+16.	 “Initiative1.epic3.story5” (1 point)
 17.	“Initiative2.epic1.story2” (4 points)
 18.	“Initiative1.epic3.story6” (4 points)
 
@@ -129,7 +129,6 @@ Data source: https://www.kaggle.com/austinreese/usa-housing-listings
 *	“Initiative2.epic4”
 *	“Initiative2.epic5”
 
-
 ## Directory structure 
 
 ```
@@ -143,7 +142,6 @@ Data source: https://www.kaggle.com/austinreese/usa-housing-listings
 ├── config                            <- Directory for configuration files 
 │   ├── local/                        <- Directory for keeping environment variables and other local configurations that *do not sync** to Github 
 │   ├── logging/                      <- Configuration of python loggers
-│   ├── config.py                     <- Configurations for S3 and database related
 │   ├── flaskconfig.py                <- Configurations for Flask API 
 │
 ├── data                              <- Folder that contains data used or generated. Only the external/ and sample/ subdirectories are tracked by git. 
@@ -167,8 +165,6 @@ Data source: https://www.kaggle.com/austinreese/usa-housing-listings
 ├── reference/                        <- Any reference material relevant to the project
 │
 ├── src/                              <- Source data for the project 
-│   ├── upload_data.py                <- Script for uploading data to target s3 bucket
-│   ├── create_db.py                  <- Script for creating database (locally in sqlite or in RDS)
 │
 ├── test/                             <- Files necessary for running model tests (see documentation below) 
 │
@@ -178,80 +174,44 @@ Data source: https://www.kaggle.com/austinreese/usa-housing-listings
 ```
 
 ## Running the app
+### 1. Initialize the database 
 
-### 1. Data acquisition
+#### Create the database with a single song 
+To create the database in the location configured in `config.py` with one initial song, run: 
 
-#### Acquire data from data source
+`python run.py create_db --engine_string=<engine_string> --artist=<ARTIST> --title=<TITLE> --album=<ALBUM>`
 
-You should first download the dataset (a csv file) manually from https://www.kaggle.com/austinreese/usa-housing-listings
-Just sign in if you have a Kaggle account already, otherwise please register one and then sign in. After sign in, click `download`. 
+By default, `python run.py create_db` creates a database at `sqlite:///data/tracks.db` with the initial song *Radar* by Britney spears. 
+#### Adding additional songs 
+To add an additional song:
 
-Once finishing downloading, please unzip the csv file. The name would be `housing.csv`.
+`python run.py ingest --engine_string=<engine_string> --artist=<ARTIST> --title=<TITLE> --album=<ALBUM>`
 
-The location to put the csv file is configurable. If you put it in the `data` directory (the default location), then you are all set. But if you put it somewhere other than the default location, you need to change `LOCAL_FILE` in `config/config.py` before proceeding. 
+By default, `python run.py ingest` adds *Minor Cause* by Emancipator to the SQLite database located in `sqlite:///data/tracks.db`.
 
-#### Push data to S3 bucket
+#### Defining your engine string 
+A SQLAlchemy database connection is defined by a string with the following format:
 
-Next step is to put data into a S3 bucket. Note that S3 bucket name is configurable and feel free to change `BUCKET_NAME` in `config/config.py` if you want to write the data to your own bucket.
+`dialect+driver://username:password@host:port/database`
 
-You could also customize the uploaded file name in S3 by changing `S3_FILE` in `config/config.py`.
+The `+dialect` is optional and if not provided, a default is used. For a more detailed description of what `dialect` and `driver` are and how a connection is made, you can see the documentation [here](https://docs.sqlalchemy.org/en/13/core/engines.html). We will cover SQLAlchemy and connection strings in the SQLAlchemy lab session on 
+##### Local SQLite database 
 
-Note that the csv file is ~500 MB, so please be patient when uploading.
+A local SQLite database can be created for development and local testing. It does not require a username or password and replaces the host and port with the path to the database file: 
 
-### 2. Initialize the database 
+```python
+engine_string='sqlite:///data/tracks.db'
 
-#### Create database schema
-
-Database schema could be created either locally in sqlite or in RDS. It is configurable by `RDS` in `config/config.py`. The default is `False` and it will create the database scheme locally in sqlite. If you change it to be `True`, then it will create the database schema in RDS. 
-
-If you decide to create locally, the local path is also configurable and you could change `SQLITE` in `config/config.py`. The default is `"sqlite:///data/housing.db"`, which means if you set `RDS` to be `False`, the database schema would be created in `data` folder and named `housing.db`. 
+```
 
 The three `///` denote that it is a relative path to where the code is being run (which is from the root of this directory).
 
-## Running ingestion script in Docker 
+You can also define the absolute path with four `////`, for example:
 
-Note: You have to be on the Northwestern VPN.
-
-### 1. Build the image 
-
-The Dockerfile for running the ingestion script is in this directory (the root of the repo). To build the Docker image, run from this directory:
-
-```bash
-docker build -t housing .
+```python
+engine_string = 'sqlite://///Users/cmawer/Repos/2020-MSIA423-template-repository/data/tracks.db'
 ```
 
-This command builds the Docker image, with the tag `housing`.
-
-### 2. Run the container 
-
-To run the container that will land data in S3 (note that you have to manually download data first, please follow detailed instruction under 'Acquire data from data source' part above), run from this directory: 
-
-#### Local SQLite database
-
-Replace `***` below with your own aws credentials and just run:
-
-```bash
-docker run -e AWS_ACCESS_KEY_ID=*** -e AWS_SECRET_ACCESS_KEY=*** housing run.py
-```
-
-#### Database in RDS
-
-Replace all `***` below with specific information to set those environment variables and run:
-
-```bash
-docker run -e MYSQL_USER=*** -e MYSQL_PASSWORD=*** -e MYSQL_HOST=*** -e MYSQL_PORT=*** -e DATABASE_NAME=*** -e AWS_ACCESS_KEY_ID=*** -e AWS_SECRET_ACCESS_KEY=*** housing run.py
-```
-For example:
-
-`MYSQL_HOST=nw-msia423-sym.cydilr9xgdol.us-east-2.rds.amazonaws.com`
-
-`MYSQL_PORT=3306`
-
-`DATABASE_NAME=msia423_db`
-
-Up to here is for Mid-project PR and checkpoint. The followings are from the template repo for future reference.
-
------------------------------------------------------------------------------------------------------------------
 
 ### 2. Configure Flask app 
 
@@ -313,3 +273,5 @@ docker kill test
 ```
 
 where `test` is the name given in the `docker run` command.
+
+
