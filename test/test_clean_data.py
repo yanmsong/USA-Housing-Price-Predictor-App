@@ -11,7 +11,7 @@ def test_clean_data_good():
 	cols_to_use = ['price', 'type', 'sqfeet', 'beds', 'baths', 'laundry_options', 'state', 'region']
 
 	df_true = pd.read_csv("test/sample_data.csv")
-	df_test = df_true
+	df_test = df_true.copy()
 	df_true = df_true.drop(cols_to_drop, axis='columns')
 
 	df_true = df_true[df_true.price <= 5000]

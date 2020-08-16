@@ -1,12 +1,8 @@
 # USA Housing Price Predictor App
 
-**Developer**: Yanmeng (Selina) Song    
-**QA**: Lirong Ma
-
 <!-- toc -->
 
 - [Project Charter](#project-charter)
-- [Backlog](#backlog)
 - [Directory structure](#directory-structure)
 - [Running the model pipeline in Docker](#running-the-model-pipeline-in-docker)
   * [1. Build the image](#1-build-the-image)
@@ -47,88 +43,6 @@ Data source: https://www.kaggle.com/austinreese/usa-housing-listings
 * Business outcome metric:
 
   Those users who have visited the web app to predict housing price will be contacted later asking for their experience. The satisfaction rate should be greater than 70%.
-
-## Planning
-
-### **Initiative 1**: Develop a well-performed machine learning model for predicting housing price.
-
-*	**Epic 1**: *explore data and gain insights from features* 
-
-    * **Story 1**: plot histogram to visualize the distribution of each variable, detect outliers and skewness
-    *	**Story 2**: check descriptive statistics of each variable and correlation among them, detect multicollinearity
-    *	**Story 3**: draw a heatmap (using latitude and longitude) to visualize where housing listings are located 
-    *	**Story 4**: identify variations in price by state and by region to investigate significant difference
-    *	**Story 5**: plot pie charts to visualize the makeup of housing types, laundry options, and parking options
-
-*	**Epic 2**: *train a baseline model for use in production*
-
-    *	**Story 1**: scope determining – try different sampling methods to reduce the size of data (originally 384,977 observations), such as stratified sampling based on region
-    *	**Story 2**: data cleaning – remove useless columns, correct erroneous/inconsistent data, treat outliers, impute missing values, transform and standardize variables, etc.
-    *	**Story 3**: feature engineering – generate new features, reduce levels of categorical variables by grouping similar classes, perform feature selection, conduct one-hot encoding, etc.
-    *	**Story 4**: split data into training and test sets (70:30 ratio)
-    *	**Story 5**: build and train a linear regression model and get baseline results
-
-*	**Epic 3**: *improve upon the baseline model for better prediction results*
-
-    *	**Story 1**: build and train other machine learning models, such as Ridge regression, Lasso regression, K-nearest Neighbors, Decision Tree, Random Forests, Gradient Boosting Machine
-    *	**Story 2**: tune hyperparameters for each candidate model through 10-fold cross validation and select the best set of parameters for each model based on cross validation RMSE
-    *	**Story 3**: choose the best model based on prediction accuracy, model interpretability and computational expenditure, then predict on the test set and see the results (RMSE and 95% confidence interval)
-    *	**Story 4**: refit the selected model on the whole cleaned dataset and create table in database to store fitted parameters
-    *	**Story 5**: evaluate feature importance and determine features to be put on web app for user inputs
-    * **Story 6**: code review, logging, and testing for reproducibility
-
-*	**Epic 4**: *update the best model with newly scraped data (given the housing market changes frequently and the data is scraped every few months)*
-
-    *	**Story 1**: apply the similar data processing pipeline to the new data to make it ready for model
-    *	**Story 2**: train the optimal model above on the new training data and report performance metrics on the held-out test set
-    *	**Story 3**: make the final model ready for deployment (i.e., repeat “Initiative1.epic3.story4”)
-
-### **Initiative 2**: Deploy an interactive web application that takes housing features from user and output predicted housing price in several seconds.
-
-*	**Epic 1**: *Design User Interface for interaction*
-    
-    *	**Story 1**: setup the layout and design for the HTML
-    *	**Story 2**: add user input functionality
-    *	**Story 3**: display results and improve the UI if necessary
-
-*	**Epic 2**: *Deploy the web app (Flask) onto AWS*
-
-*	**Epic 3**: *Use an S3 bucket to store raw source data and create an RDS instance*
-
-*	**Epic 4**: *Testing (both unit tests and configured reproducibility tests)*
-
-*	**Epic 5**: *App improvement – provide more insights to users in addition to the predicted price*
-
-## Backlog
-1.	“Initiative1.epic1.story1” (0 point) – PLANNED 
-2.	“Initiative1.epic1.story2” (0 point) – PLANNED 
-3.	“Initiative1.epic1.story3” (1 point) – PLANNED 
-4.	“Initiative1.epic1.story4” (1 point) – PLANNED 
-5.	“Initiative1.epic1.story5” (0 point) – PLANNED 
-6.	“Initiative1.epic2.story1” (2 points) – PLANNED
-7.	“Initiative1.epic2.story2” (4 points) – PLANNED
-8.	“Initiative1.epic2.story3” (4 points) – PLANNED
-9.	“Initiative1.epic2.story4” (0 point) – PLANNED
-10.	 “Initiative1.epic2.story5” (2 points) – PLANNED
-11.	 “Initiative1.epic3.story1” (4 points) – PLANNED
-12.	 “Initiative2.epic1.story1” (4 points)
-13.	 “Initiative1.epic3.story2” (4 points)
-14.	“Initiative1.epic3.story3” (2 points)
-15.	 “Initiative1.epic3.story4” (2 points)
-16.	 “Initiative1.epic3.story5” (1 points)
-17.	“Initiative2.epic1.story2” (4 points)
-18.	“Initiative1.epic3.story6” (4 points)
-
-## Icebox
-
-*	“Initiative1.epic4.story1”
-*	“Initiative1.epic4.story2”
-*	“Initiative1.epic4.story3”
-*	“Initiative2.epic1.story3”
-*	“Initiative2.epic2”
-*	“Initiative2.epic3”
-*	“Initiative2.epic4”
-*	“Initiative2.epic5”
 
 
 ## Directory structure 

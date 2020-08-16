@@ -8,7 +8,7 @@ from src.featurize import featurize, get_dummies
 def test_featurize_good():
 	"""Good path unit test for the functionality of featurize"""
 	df_true = pd.read_csv("test/sample_data.csv")
-	df_test = df_true
+	df_test = df_true.copy()
 
 	for col in ['laundry_options', 'state']:
 		df_true = get_dummies(df_true, col)
@@ -35,7 +35,7 @@ def test_featurize_bad():
 def test_get_dummies_good():
 	"""Good path unit test for the functionality of get_dummies"""
 	df_true = pd.read_csv("test/sample_data.csv")
-	df_test = df_true
+	df_test = df_true.copy()
 	type_dummy = pd.get_dummies(df_true['type']).rename(columns=lambda x: 'type_' + str(x))
 	df_true = pd.concat([df_true, type_dummy], axis=1)
 	df_true.drop(['type'], inplace=True, axis=1)

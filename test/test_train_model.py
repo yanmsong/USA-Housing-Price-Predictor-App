@@ -12,7 +12,7 @@ from src.train_model import train, data_split
 def test_data_split_good():
 	"""Good path unit test for the functionality of data_split"""
 	df_true = pd.read_csv("test/sample_data.csv")
-	df_test = df_true
+	df_test = df_true.copy()
 	target = df_true['price']
 	features = df_true.loc[:, df_true.columns != 'price']
 
